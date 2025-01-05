@@ -4,6 +4,7 @@ import axios from "axios";
 import * as response from "autoprefixer";
 
 const BookCard = ({data, favourite}) => {
+   
     console.log(data)
     const headers = {
         id: localStorage.getItem("id"),
@@ -36,6 +37,7 @@ const BookCard = ({data, favourite}) => {
                     <button></button>
                 </div>
             </Link>
+            
             {favourite && (
                 <button
                     className={"bg-red-600  px-4 py-2 rounded border border-yellow-500 text-white font-semibold text-xl mt-4"}

@@ -26,7 +26,7 @@ const Profile = () => {
            }
         };
         fetch();
-    }, []);
+    }, [isLoggedIn]);
     return (
         <div className={"bg-zinc-900 px-2 md:px-12 flex flex-col md:flex-row  py-8 gap-4 text-white"}>
             {!Profile && <div className={"w-full h-[100%] flex items-center justify-center"}>

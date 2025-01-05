@@ -107,4 +107,30 @@ router.put("/update-address", authenticateToken, async (req, res) => {
         res.status(500).json({message: "Internal server error"})
     }
 })
+// Toggle user role
+router.put("/toggle-role", authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.headers;
+
+        // Найти пользователя по ID
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Переключить роль пользователя
+        user.role = user.role === "admin" ? "user" : "admin";
+        await user.save();
+
+        // Отправить ответ с новой ролью
+        res.status(200).json({
+            message: `Role switched to ${user.role}`,
+            newRole: user.role,
+        });
+    } catch (e) {
+        console.error("Error toggling role:", e);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 module.exports = router;

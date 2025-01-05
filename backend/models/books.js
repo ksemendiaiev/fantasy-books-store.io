@@ -27,9 +27,12 @@ const book = new mongoose.Schema({
         language: {
             type: String,
             required: true,
-        }
-
-    },
-    {timestamps: true})
+        },
+        owner: {
+           type: mongoose.Schema.Types.ObjectId, // Используем ObjectId
+        ref: "user", // Ссылаемся на модель User
+            required: true,
+        },
+     },  {timestamps: true})
 
 module.exports = mongoose.model("books", book);

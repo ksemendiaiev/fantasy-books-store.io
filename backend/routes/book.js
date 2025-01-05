@@ -1,19 +1,20 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const jwt = require("jsonwebtoken")
-const Book = require("../models/books")
-const {authenticateToken} = require("./userAuth")
+const jwt = require("jsonwebtoken");
+const Book = require("../models/books");
+const { authenticateToken } = require("./userAuth");
 
-
-
-//add book --admin
-router.post("/add-book", authenticateToken, async(req, res) => {
-    try{
-        const {id} = req.headers;
+// Add book --admin
+router.post("/add-book", authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.headers; // Get user ID from headers
         const user = await User.findById(id);
-        if(user.role !== "admin"){
-            return res.status(400).json({message: "You don't have an access to perform admin"})
+
+        if (!user || user.role !== "admin") {
+            return res.status(400).json({ message: "You don't have access to perform this action" });
         }
+
+        // Add the owner field when creating the book
         const book = new Book({
             url: req.body.url,
             title: req.body.title,
@@ -21,20 +22,23 @@ router.post("/add-book", authenticateToken, async(req, res) => {
             price: req.body.price,
             description: req.body.description,
             language: req.body.language,
+            owner: user._id, // Associate the book with the user ID
         });
-        await book.save();
-        res.status(200).json({message: "Book added successfully"})
-    }catch (e) {
-        console.log("Adding book error:  ", e)
-        res.status(500).json({message: "Internal server error"});
-    }
-})
-//update book
-router.put("/update-book", authenticateToken, async(req, res) => {
-    try{
-        const {bookid} = req.headers;
 
-       await Book.findByIdAndUpdate(bookid, {
+        await book.save();
+        res.status(200).json({ message: "Book added successfully" });
+    } catch (e) {
+        console.log("Adding book error: ", e);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Update book
+router.put("/update-book", authenticateToken, async (req, res) => {
+    try {
+        const { bookid } = req.headers;
+
+        await Book.findByIdAndUpdate(bookid, {
             url: req.body.url,
             title: req.body.title,
             author: req.body.author,
@@ -42,66 +46,68 @@ router.put("/update-book", authenticateToken, async(req, res) => {
             description: req.body.description,
             language: req.body.language,
         });
-        return res.status(200).json({message: "Book updated successfully"})
-    }catch (e) {
-        console.log("Update book error:  ", e)
-        return res.status(500).json({message: "An error occurred"});
+        return res.status(200).json({ message: "Book updated successfully" });
+    } catch (e) {
+        console.log("Update book error: ", e);
+        return res.status(500).json({ message: "An error occurred" });
     }
-} )
+});
 
-//delete book
-router.delete("/delete-book", authenticateToken, async(req, res) => {
-    try{
-        const {bookid} = req.headers;
+// Delete book
+router.delete("/delete-book", authenticateToken, async (req, res) => {
+    try {
+        const { bookid } = req.headers;
         await Book.findByIdAndDelete(bookid);
-        return res.status(200).json({message: "Book deleted successfully"})
-        
-    }catch (e) {
-        console.log("Delete book error", e)
-        return res.status(500).json({message: "An error occurred"});
-
+        return res.status(200).json({ message: "Book deleted successfully" });
+    } catch (e) {
+        console.log("Delete book error", e);
+        return res.status(500).json({ message: "An error occurred" });
     }
-})
+});
 
-//get all books
-router.get("/get-all-books", async(req, res) => {
-    try{
-        const books = await Book.find().sort({createdAt: -1 });
+// Get all books
+router.get("/get-all-books", async (req, res) => {
+    try {
+        // Populate the owner field to include username and email
+        const books = await Book.find().sort({ createdAt: -1 }).populate("owner", "username email");
         return res.json({
             status: "Success",
             data: books,
-        })
-    }catch (e) {
+        });
+    } catch (e) {
         console.log("Getting all books error", e);
-        return res.status(500).json({message: "An error occurred"})
+        return res.status(500).json({ message: "An error occurred" });
     }
-})
-//get recently added books
-router.get("/get-recent-books", async(req, res) => {
-    try{
-        const books = await Book.find().sort({createdAt: -1 }).limit(4);
+});
+
+// Get recently added books
+router.get("/get-recent-books", async (req, res) => {
+    try {
+        const books = await Book.find().sort({ createdAt: -1 }).limit(4).populate("owner", "username email");
         return res.json({
             status: "Success",
             data: books,
-        })
-    }catch (e) {
+        });
+    } catch (e) {
         console.log("Getting recent books error", e);
-        return res.status(500).json({message: "An error occurred"})
+        return res.status(500).json({ message: "An error occurred" });
     }
-})
-//get book by id
+});
 
-router.get("/get-book-by-id/:id", async(req, res) => {
-    try{
-        const {id} = req.params;
-        const book = await Book.findById(id);
+// Get book by ID
+router.get("/get-book-by-id/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Populate the owner field to get user details
+        const book = await Book.findById(id).populate("owner", "username email avatar");
         return res.json({
             status: "Success",
             data: book,
         });
-    }catch (e) {
-        console.log("Getting book by id error: ", e);
-        return res.status(500).json({message: "An error occurred"})
+    } catch (e) {
+        console.log("Getting book by ID error: ", e);
+        return res.status(500).json({ message: "An error occurred" });
     }
-})
+});
+
 module.exports = router;
