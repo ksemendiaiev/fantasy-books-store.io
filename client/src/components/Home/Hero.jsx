@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import DeynerisT from "../../accets/daenerys.png"
 
 const Hero = () => {
     return (
@@ -23,7 +24,7 @@ const Hero = () => {
                 </div>
             </div>
             <div className="w-full lg:w-3/6 lg:h-[100%] flext items-center justify-center">
-                <img src="/john-snow.png" alt="hero"/>
+                <img src={DeynerisT} alt="hero"/>
             </div>
         </div>
     );
