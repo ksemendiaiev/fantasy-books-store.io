@@ -3,6 +3,7 @@ import Loader from "../components/Loader/Loader";
 import axios from "axios";
 import {AiFillDelete} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
+import api from '../api';
 
 
 const Cart = () => {
@@ -19,8 +20,8 @@ const Cart = () => {
 
         const fetch = async () => {
             try {
-                const res = await axios.get(
-                    "http://localhost:1000/api/v1/get-user-cart",
+                const res = await api.get(
+                    "/get-user-cart",
                     {headers}
                 );
                 setCart(res.data.data);
@@ -34,7 +35,7 @@ const Cart = () => {
 
     const deleteItem = async (bookid) => {
         try {
-            const response = await axios.put(`http://localhost:1000/api/v1/remove-from-cart/${bookid}`,
+            const response = await api.put(`/remove-from-cart/${bookid}`,
                 {}, {headers});
             console.log(response);
         } catch (e) {
@@ -53,8 +54,8 @@ const Cart = () => {
     }, [Cart]);
     const PlaceOrder = async () => {
         try{
-            const response = await axios.post(
-                "http://localhost:1000/api/v1/place-order",
+            const response = await api.post(
+                "/place-order",
                 {order: Cart},
                 {headers}
             );

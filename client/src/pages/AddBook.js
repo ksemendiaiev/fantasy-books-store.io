@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import axios from "axios";
+import api from '../api';
 
 const AddBook = () => {
     const [Data, setData] = useState({
@@ -31,8 +32,8 @@ const AddBook = () => {
             ) {
                 alert("All fields are required");
             }else {
-                const response = await axios.post(
-                    "http://localhost:1000/api/v1/add-book",
+                const response = await api.post(
+                    "/add-book",
                     Data, {headers}
                 );
                 setData({

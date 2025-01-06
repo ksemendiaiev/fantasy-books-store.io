@@ -12,6 +12,11 @@ const Favourite = require("./routes/favourite");
 const Cart = require("./routes/cart");
 const Order = require("./routes/order");
 
+const corsOptions = {
+    origin: ["https://your-frontend-app.vercel.app"], // Укажите домен frontend
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+};
 
 
 const PORT = process.env.PORT || 7000

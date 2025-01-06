@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import Loader from "../Loader/Loader";
 import {queries} from "@testing-library/react";
+import api from '../../api';
 
 const Settings = () => {
     const [ProfileData, setProfileData] = useState([]);
@@ -18,8 +19,8 @@ const Settings = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const response = await axios.get(
-                "http://localhost:1000/api/v1/get-user-information",
+            const response = await api.get(
+                "/get-user-information",
                 {headers}
             );
             setProfileData(response.data);
@@ -29,7 +30,7 @@ const Settings = () => {
     }, []);
 
     const submitAddress = async () => {
-        const response = await axios.put("http://localhost:1000/api/v1/update-address", Value, {headers});
+        const response = await api.put("/update-address", Value, {headers});
         alert(response.data.message)
     }
 

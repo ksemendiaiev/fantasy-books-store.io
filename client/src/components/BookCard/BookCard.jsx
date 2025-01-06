@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import axios from "axios";
+import api from "../../api";
 import * as response from "autoprefixer";
 
 const BookCard = ({data, favourite}) => {
@@ -14,14 +15,14 @@ const BookCard = ({data, favourite}) => {
     const handleRemoveBook = async () => {
 
         try{
-            const response = await axios.put(
-                "http://localhost:1000/api/v1/remove-book-from-favourite", {},
+            const response = await api.put(
+                "/remove-book-from-favourite", {},
                 {headers}
             );
             alert(response.data.message);
 
         }catch (e) {
-
+            console.error("Error removing book from favourites:", e);
         }
     }
     return (

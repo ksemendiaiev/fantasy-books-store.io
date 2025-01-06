@@ -4,6 +4,7 @@ import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { authActions } from "../../store/auth";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import api from '../../api';
 
 const Sidebar = ({ data }) => {
     const dispatch = useDispatch();
@@ -18,8 +19,8 @@ const Sidebar = ({ data }) => {
         };
 
         try {
-            const response = await axios.put(
-                "http://localhost:1000/api/v1/toggle-role",
+            const response = await api.put(
+                "/toggle-role",
                 {},
                 { headers }
             );

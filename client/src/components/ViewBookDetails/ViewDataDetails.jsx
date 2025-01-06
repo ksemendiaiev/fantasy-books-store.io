@@ -6,6 +6,7 @@ import Loader from "../Loader/Loader";
 import { FaEdit, FaHeart, FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { MdOutlineDelete } from "react-icons/md";
+import api from '../../api';
 
 const ViewDataDetails = () => {
     const { id } = useParams();
@@ -17,8 +18,8 @@ const ViewDataDetails = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:1000/api/v1/get-book-by-id/${id}`
+                const response = await api.get(
+                    `/get-book-by-id/${id}`
                 );
                 setData(response.data.data); // Устанавливаем данные книги
             } catch (error) {
@@ -39,20 +40,20 @@ const ViewDataDetails = () => {
     };
 
     const handleFavourite = async () => {
-        const response = await axios.put(
-            "http://localhost:1000/api/v1/add-book-to-favourite", {}, { headers }
+        const response = await api.put(
+            "/add-book-to-favourite", {}, { headers }
         );
         alert(response.data.message);
     };
 
     const handleCart = async () => {
-        const response = await axios.put("http://localhost:1000/api/v1/add-to-cart", {}, { headers });
+        const response = await api.put("/add-to-cart", {}, { headers });
         alert(response.data.message);
     };
 
     const deleteBook = async () => {
-        const response = await axios.delete(
-            "http://localhost:1000/api/v1/delete-book",
+        const response = await api.delete(
+            "/delete-book",
             { headers }
         );
         alert(response.data.message);

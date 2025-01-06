@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
+import api from '../api';
 
 const UpdateBook = () => {
     const {id} = useParams();
@@ -36,8 +37,8 @@ const UpdateBook = () => {
             ) {
                 alert("All fields are required");
             } else {
-                const response = await axios.put(
-                    "http://localhost:1000/api/v1/update-book",
+                const response = await api.put(
+                    "/update-book",
                     Data, {headers}
                 );
                 setData({

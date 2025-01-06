@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import api from '../api';
 
 const SignUp = () => {
     const [Values, setValues] = useState({
@@ -24,8 +25,8 @@ const SignUp = () => {
             ) {
                 alert("All fields are required!")
             } else {
-                const response = await axios.post(
-                    "http://localhost:1000/api/v1/sign-up",
+                const response = await api.post(
+                    "/sign-up",
                     Values
                 );
                 alert(response.data.message);

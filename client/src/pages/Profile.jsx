@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import axios from "axios";
 import Loader from "../components/Loader/Loader";
 import MobileNav from "../components/Profile/MobileNav";
+import api from '../api';
 
 const Profile = () => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -16,8 +17,8 @@ const Profile = () => {
     useEffect(() => {
         const fetch = async () => {
            try{
-               const response = await axios.get(
-                   "http://localhost:1000/api/v1/get-user-information",
+               const response = await api.get(
+                   "/get-user-information",
                    {headers}
                );
                setProfile(response.data)
