@@ -59,8 +59,8 @@ const UpdateBook = () => {
     };
     useEffect(() => {
         const fetch = async () => {
-            const response = await axios.get(
-                `http://localhost:1000/api/v1/get-book-by-id/${id}`
+            const response = await api.get(
+                `/get-book-by-id/${id}`
             );
             setData(response.data.data);
         };
