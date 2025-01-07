@@ -21,16 +21,21 @@ import UpdateBook from "./pages/UpdateBook";
 const App = () => {
     const dispatch = useDispatch();
     const role = useSelector((state) => state.auth.role);
+    
     useEffect(() => {
+        const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+   // const role = localStorage.getItem("role");
         if (
-            localStorage.getItem("id") &&
-            localStorage.getItem("token") &&
-            localStorage.getItem("role")
+            id &&
+            token &&
+            role
         ) {
-dispatch(authActions.login());
+dispatch(authActions.login({token,
+                            role}));
 dispatch(authActions.changeRole(localStorage.getItem("role")));
         }
-    }, []);
+    }, [dispatch]);
     return (
         <div>
 

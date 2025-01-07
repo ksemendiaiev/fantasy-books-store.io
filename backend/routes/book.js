@@ -37,7 +37,19 @@ router.post("/add-book", authenticateToken, async (req, res) => {
 router.put("/update-book", authenticateToken, async (req, res) => {
     try {
         const { bookid } = req.headers;
+        const { id: userId } = req.headers; 
 
+        const book = await Book.findById(bookid);
+
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+        if (String(book.owner) !== String(userId)) {
+            return res.status(403).json({ message: "You are not authorized to update this book" });
+        }
+
+       
         await Book.findByIdAndUpdate(bookid, {
             url: req.body.url,
             title: req.body.title,
@@ -46,6 +58,7 @@ router.put("/update-book", authenticateToken, async (req, res) => {
             description: req.body.description,
             language: req.body.language,
         });
+
         return res.status(200).json({ message: "Book updated successfully" });
     } catch (e) {
         console.log("Update book error: ", e);
@@ -57,7 +70,22 @@ router.put("/update-book", authenticateToken, async (req, res) => {
 router.delete("/delete-book", authenticateToken, async (req, res) => {
     try {
         const { bookid } = req.headers;
+        const { id: userId } = req.headers; 
+
+        const book = await Book.findById(bookid);
+
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+       
+        if (String(book.owner) !== String(userId)) {
+            return res.status(403).json({ message: "You are not authorized to delete this book" });
+        }
+
+    
         await Book.findByIdAndDelete(bookid);
+
         return res.status(200).json({ message: "Book deleted successfully" });
     } catch (e) {
         console.log("Delete book error", e);
@@ -99,7 +127,7 @@ router.get("/get-book-by-id/:id", async (req, res) => {
     try {
         const { id } = req.params;
         // Populate the owner field to get user details
-        const book = await Book.findById(id).populate("owner", "username email avatar");
+        const book = await Book.findById(id).populate("owner", "username email _id");
         return res.json({
             status: "Success",
             data: book,
